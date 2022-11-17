@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+sagemaker = "==2.109.0"
+python-dotenv = "0.21.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
