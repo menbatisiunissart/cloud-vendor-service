@@ -1,6 +1,6 @@
 import logging
 import os
-from cloud_vendor_service.credential.aws.session import get_s3_client
+from cloud_vendor_service.client.aws.session import get_s3_client
 import botocore.exceptions
 from cloud_vendor_service.environment import get_env_var, get_env, get_vendor, VENDOR, ENV
 # TODO: import below librairies if need to enable Google cloud
