@@ -49,29 +49,27 @@ def download_blob(local_file_path: str, origin_file_path: str, bucket_name: str)
 
 def download_dir(
     local: str,
-    bucket: str,
     prefix: str,
-    client=s3_client
+    bucket_name: str,
     ):
     """
     params:
-    - prefix: pattern to match in s3
     - local: local path to folder in which to place files
-    - bucket: s3 bucket with target contents
-    - client: initialized s3 client object
+    - prefix: pattern to match in s3
+    - bucket_name: s3 bucket with target contents
     """
     keys = []
     dirs = []
     next_token = ''
     base_kwargs = {
-        'Bucket':bucket,
+        'Bucket':bucket_name,
         'Prefix':prefix,
     }
     while next_token is not None:
         kwargs = base_kwargs.copy()
         if next_token != '':
             kwargs.update({'ContinuationToken': next_token})
-        results = client.list_objects_v2(**kwargs)
+        results = s3_client.list_objects_v2(**kwargs)
         contents = results.get('Contents')
         for i in contents:
             k = i.get('Key')
@@ -88,4 +86,4 @@ def download_dir(
         dest_pathname = os.path.join(local, k)
         if not os.path.exists(os.path.dirname(dest_pathname)):
             os.makedirs(os.path.dirname(dest_pathname))
-        client.download_file(bucket, k, dest_pathname)
+        s3_client.download_file(bucket_name, k, dest_pathname)
