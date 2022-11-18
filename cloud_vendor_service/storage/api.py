@@ -3,12 +3,12 @@ import os
 from cloud_vendor_service.environment import get_env_var, get_env, get_vendor, VENDOR, ENV
 
 vendor = get_vendor()
-if vendor == VENDOR.GOOGLE.name:
+if vendor == VENDOR.GOOGLE:
     import cloud_vendor_service.storage.google.storage as vendor_storage
-elif vendor == VENDOR.AWS.name:
+elif vendor == VENDOR.AWS:
     import cloud_vendor_service.storage.aws.storage as vendor_storage
 else:
-    raise NotImplementedError(f"cannot upload blob for vendor = {vendor}")
+    raise NotImplementedError(f"cannot get vendor_storage api for vendor = {vendor}")
 
 env = get_env()
 FOLDER = env.name
@@ -52,8 +52,41 @@ def download_blob(local_file_path: str, origin_file_path: str, bucket_name: str=
     )
     return local_file_path
 
-def file_name(file_path):
+def download_dir(
+    local: str,
+    prefix: str,
+    bucket_name: str=STORAGE_BUCKET
+    ):
+    """
+    params:
+    - prefix: pattern to match in cloud bucket
+    - local: local path to folder in which to place files
+    - bucket: cloud bucket with target contents
+    """
+    vendor_storage.download_dir(
+        local=local,
+        prefix=prefix,
+        bucket_name=bucket_name
+    )
+
+def file_name(file_path: str):
     file_name = os.path.basename(file_path)
     return file_name
 
+def check_exists(dir_name: str):
+    """
+    Check if folder is empty
+    params:
+    - dir_name: path to folder
+
+    os.listdir() can throw an exception when the given path does not exist. 
+    Therefore, we cover this case by checking os.path.isdir() first
+    """
+    if os.path.isdir(dir_name):
+        if not os.listdir(dir_name):
+            return False
+        else:    
+            return True
+    else:
+        return False
 
