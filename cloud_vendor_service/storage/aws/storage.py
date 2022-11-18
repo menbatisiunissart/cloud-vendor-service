@@ -51,12 +51,14 @@ def download_dir(
     local: str,
     prefix: str,
     bucket_name: str,
+    keep_dir_structure: bool
     ):
     """
     params:
     - local: local path to folder in which to place files
     - prefix: pattern to match in s3
     - bucket_name: s3 bucket with target contents
+    - keep_dir_structure: if `True` return files entire path instead of basename
     """
     keys = []
     dirs = []
@@ -83,7 +85,11 @@ def download_dir(
         if not os.path.exists(os.path.dirname(dest_pathname)):
             os.makedirs(os.path.dirname(dest_pathname))
     for k in keys:
-        dest_pathname = os.path.join(local, k)
+        if keep_dir_structure:
+            dest_pathname = os.path.join(local, k)
+        else:
+            file_name = os.path.basename(k)
+            dest_pathname = os.path.join(local, file_name)
         if not os.path.exists(os.path.dirname(dest_pathname)):
             os.makedirs(os.path.dirname(dest_pathname))
         s3_client.download_file(bucket_name, k, dest_pathname)
