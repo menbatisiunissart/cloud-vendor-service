@@ -11,11 +11,15 @@ else:
     raise NotImplementedError(f"cannot get vendor_storage api for vendor = {vendor}")
 
 env = get_env()
-FOLDER = env.name
 STORAGE_BUCKET = get_env_var('STORAGE_BUCKET')
 
+def env_based_path(path: str):
+    FOLDER = env.name
+    path = FOLDER+'/'+path
+    return path
+
 def upload_file(file_path: str, destination_path: str, bucket_name: str=None):
-    destination_path = FOLDER+'/'+destination_path
+    destination_path = env_based_path(destination_path)
     storage_path = upload_blob(file_path, destination_path, bucket_name=bucket_name)
     if env != ENV.LOCAL:
         os.remove(file_path)
@@ -44,7 +48,7 @@ def download_blob(local_file_path: str, origin_file_path: str, bucket_name: str=
     :param bucket_name: (Optional) The ID of your GCS bucket
     Return name: Local path of where the downloaded file is
     """
-    origin_file_path = FOLDER+'/'+origin_file_path
+    origin_file_path = env_based_path(origin_file_path)
     vendor_storage.download_blob(
         local_file_path=local_file_path,
         origin_file_path=origin_file_path,
@@ -55,18 +59,22 @@ def download_blob(local_file_path: str, origin_file_path: str, bucket_name: str=
 def download_dir(
     local: str,
     prefix: str,
-    bucket_name: str=STORAGE_BUCKET
+    bucket_name: str=STORAGE_BUCKET,
+    keep_dir_structure: bool=False
     ):
     """
     params:
     - prefix: pattern to match in cloud bucket
     - local: local path to folder in which to place files
     - bucket: cloud bucket with target contents
+    - keep_dir_structure: if `True` return files entire path instead of file basenames
     """
+    prefix = env_based_path(prefix)
     vendor_storage.download_dir(
         local=local,
         prefix=prefix,
-        bucket_name=bucket_name
+        bucket_name=bucket_name,
+        keep_dir_structure=keep_dir_structure
     )
 
 def file_name(file_path: str):
