@@ -19,8 +19,8 @@ def upload_blob(
     :param bucket_name: The name of the bucket
     :return storage_path: Destination path of the file
     """
-    if bucket_name is not None:
-        raise NotImplementedError(f'custom bucket not supported for vendor {VENDOR.AWS.name}')
+    if bucket_name is None:
+        raise ValueError(f'bucket_name not provided for vendor {VENDOR.AWS.name}')
     s3_client.upload_file(source_file_name, bucket_name, destination_blob_name)
     return destination_blob_name
 
@@ -93,3 +93,4 @@ def download_dir(
         if not os.path.exists(os.path.dirname(dest_pathname)):
             os.makedirs(os.path.dirname(dest_pathname))
         s3_client.download_file(bucket_name, k, dest_pathname)
+        

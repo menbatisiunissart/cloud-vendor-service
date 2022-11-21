@@ -18,14 +18,14 @@ def env_based_path(path: str):
     path = FOLDER+'/'+path
     return path
 
-def upload_file(file_path: str, destination_path: str, bucket_name: str=None):
+def upload_file(file_path: str, destination_path: str, bucket_name: str=STORAGE_BUCKET):
     destination_path = env_based_path(destination_path)
     storage_path = upload_blob(file_path, destination_path, bucket_name=bucket_name)
     if env != ENV.LOCAL:
         os.remove(file_path)
     return storage_path
 
-def upload_blob(source_file_name: str, destination_blob_name: str, bucket_name: str=STORAGE_BUCKET):
+def upload_blob(source_file_name: str, destination_blob_name: str, bucket_name: str):
     """
     Upload a file to the bucket in cloud storage.
     :param source_file_name: Local path of the file to upload (e.g. "local/path/to/file")
