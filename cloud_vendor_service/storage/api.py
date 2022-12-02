@@ -70,7 +70,7 @@ def download_dir(
     - keep_dir_structure: if `True` return files entire path instead of file basenames
     """
     prefix = env_based_path(prefix)
-    vendor_storage.download_dir(
+    return vendor_storage.download_dir(
         local=local,
         prefix=prefix,
         bucket_name=bucket_name,

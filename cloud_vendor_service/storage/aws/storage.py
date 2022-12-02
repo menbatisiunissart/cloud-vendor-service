@@ -93,4 +93,4 @@ def download_dir(
         if not os.path.exists(os.path.dirname(dest_pathname)):
             os.makedirs(os.path.dirname(dest_pathname))
         s3_client.download_file(bucket_name, k, dest_pathname)
-        
+    return keys
