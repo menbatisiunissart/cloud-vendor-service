@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='cloud-vendor-service',
-    version='0.0.11',
+    version='0.1.0',
     description='Cloud vendor service (AWS, Google Cloud...)',
     author='',
     author_email='',
